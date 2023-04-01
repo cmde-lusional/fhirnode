@@ -1,0 +1,42 @@
+# Use the supabase/postgres:13.3.0 as the base image
+FROM supabase/postgres:13.3.0
+
+# Update the package lists and install the required packages
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    vim \
+    unzip \
+    build-essential \
+    libreadline-dev \
+    zlib1g-dev \
+    flex \
+    bison \
+    libxml2-dev \
+    libxslt-dev \
+    libssl-dev \
+    libxml2-utils \
+    xsltproc \
+    postgresql-server-dev-13 \
+    python3-dev \
+    python3-setuptools \
+    python3-pip
+
+# Download and install Multicorn2 from source
+RUN wget https://github.com/cmde-lusional/multicorn2/archive/refs/heads/main.zip && \
+    unzip main.zip && \
+    cd multicorn2-main && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -rf multicorn2-main main.zip
+
+# Install Python packages
+RUN pip3 install sqlalchemy psycopg2 && \
+    pip3 install --force-reinstall 'sqlalchemy<2.0.0'
+
+# Set any environment variables, if needed
+# ENV SOME_VARIABLE=value
+
+# Set the default command or entrypoint for the container, if needed
+# CMD ["some-command"]
