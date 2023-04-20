@@ -1,0 +1,16 @@
+# Use the supabase/postgres:13.3.0 as the base image
+FROM supabase/postgres:13.3.0
+
+# Update the package lists and install the required packages
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    vim \
+    python3-pip \
+    libpq-dev
+
+# Install Python packages
+RUN pip3 install faker psycopg2 argparse
+
+# Set the default command or entrypoint for the container, if needed
+# CMD ["some-command"]

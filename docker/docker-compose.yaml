@@ -1,24 +1,32 @@
 version: '3.8'
 
 services:
-  fhirnode_multicorn:
-    image: fhirnode_multicorn
-    container_name: fhirnode_multicorn_container
+  fhirnode_sourcedb_patient:
+    image: sourcedbpatient
+    container_name: fhirnode_sourcedb_patient
     environment:
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
     ports:
       - "5431:5432"
     volumes:
-      - fhirnode_multicorn_data:/var/lib/postgresql/data
-  fhirnode_fhirbase:
-    image: fhirbase/fhirbase:latest
-    container_name: fhirnode_fhirbase_container
+      - fhirnode_sourcedb_patient_data:/var/lib/postgresql/data
+      - ./init:/init
+    ## run the init scripts for creating the schema and also filling it with fake data - tail command is to keep container running
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirnode_sourcedb_multicorn:
+    image: fhirnode_multicorn
+    container_name: fhirnode_sourcedb_multicorn
+    environment:
+      - POSTGRES_PASSWORD=password
     ports:
-      - "3000:3000"
-      - "5432:5432"
+      - "5430:5432"
     volumes:
-      - fhirnode_fhirbase_data:/pgdata
+      - fhirnode_sourcedb_multicorn_data:/var/lib/postgresql/data
+
 
 volumes:
-  fhirnode_multicorn_data:
-  fhirnode_fhirbase_data:
+  fhirnode_sourcedb_patient_data:
+  fhirnode_sourcedb_multicorn_data:
+

@@ -1,8 +1,39 @@
-# FHIRNODE
+# FHIRTERMINALNODE
 
 ## TESTING ENVIRONMENT
 
 ### DOCKER
+
+SOURCEDBPATIENT
+
+The docker dir in this repo contains multiple dirs for different dockerfiles. 
+They all work together in the docker-compose.yaml under the docker dir.
+
+The fhirnode_sourcedb_patient contains a postgresql with a custom schema to
+simulate a patients local db. The docker-compose.yaml runs a sql file which builds
+the schema and a python script that updates the patients db with synthetic data.
+
+The fhirnode_sourcedb_multicorn node is the node that wrapps the data to send it
+to any requester. It is based on the dockerfile image under the docker multicorn dir.
+This image was build up on my forked repo here:
+
+[cmde-lusional/multicorn2
+](https://github.com/cmde-lusional/multicorn2)
+ 
+
+-> you can find more infor inside the LEGACY section of this README.md
+
+```
+docker-compose up -d
+docker-compose ps
+docker-compose logs
+docker-compose logs fhirnode_sourcedb_patient
+docker-compose down
+```
+
+
+
+# LEGACY
 
 FHIRBASE
 
