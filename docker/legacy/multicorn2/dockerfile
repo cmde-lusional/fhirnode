@@ -32,7 +32,7 @@ RUN wget https://github.com/cmde-lusional/multicorn2/archive/refs/heads/main.zip
     rm -rf multicorn2-main main.zip
 
 # Install Python packages
-RUN pip3 install sqlalchemy psycopg2 && \
+RUN pip3 install sqlalchemy psycopg2 urllib3 && \
     pip3 install --force-reinstall 'sqlalchemy<2.0.0'
 
 # Set any environment variables, if needed
