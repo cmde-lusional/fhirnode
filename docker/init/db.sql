@@ -14,7 +14,7 @@ CREATE TABLE patient (
     deceased BOOLEAN,
     address VARCHAR,
     maritalStatus VARCHAR,
-    multipleBirth BOOLEAN,
+    multipleBirthBoolean BOOLEAN,
     photo BYTEA
 );
 
