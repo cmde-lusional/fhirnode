@@ -24,6 +24,17 @@ cursor = connection.cursor()
 
 fake = Faker()
 
+# Generate and insert data
+num_patients = 1
+num_practitioners = 5
+num_encounters_per_patient = 5
+num_observations_per_encounter = 5
+num_diagnosticreports_per_encounter = 3
+
+# Generate a pool of practitioner IDs
+practitioner_ids = [str(uuid.uuid4()) for _ in range(num_practitioners)]
+practioner_ids_for_encounter = practitioner_ids.copy()
+
 # Generate a single patient
 def generate_patient():
     return {
@@ -43,7 +54,7 @@ def generate_patient():
 # Generate a single practitioner
 def generate_practitioner():
     return {
-        'id': str(uuid.uuid4()),
+        'id': practitioner_ids.pop(),
         'active': random.choice([True, False]),
         'name': fake.name(),
         'telecom': fake.phone_number(),
@@ -57,6 +68,8 @@ def generate_practitioner():
 
 # Generate a single encounter
 def generate_encounter(patient_id, practitioner_id):
+    if not practioner_ids_for_encounter:
+        raise ValueError("No practitioners available for encounter")
     return {
         'id': str(uuid.uuid4()),
         'status': random.choice(['planned', 'arrived', 'in-progress', 'onleave', 'finished', 'cancelled']),
@@ -64,9 +77,10 @@ def generate_encounter(patient_id, practitioner_id):
         'priority': random.choice(['high', 'medium', 'low']),
         'type': random.choice(['emergency', 'urgent', 'elective', 'routine']),
         'subject': patient_id,
-        'subjectStatus': random.choice(['active', 'inactive']),
+         #'subjectStatus': random.choice(['active', 'inactive']), only in R5
         'serviceProvider': fake.company(),
-        'participantType': random.choice(['doctor', 'nurse', 'technician']),
+        'participantID': random.choice(practioner_ids_for_encounter),
+        'participantType': random.choice(['practitioner', 'relatedPerson']),
         'plannedStartDate': fake.date_this_year(),
         'plannedEndDate': fake.date_this_year(),
         'length': random.randint(1, 20),
@@ -132,7 +146,7 @@ def insert_practitioner(practitioner):
 # Function to insert a single encounter
 def insert_encounter(encounter):
     query = sql.SQL(
-        "INSERT INTO encounter (id, status, class, priority, type, subject, subjectStatus, serviceProvider, participantType, plannedStartDate, plannedEndDate, length, diagnoses, preAdmissionIdentifier, admissionDestination) "
+        "INSERT INTO encounter (id, status, class, priority, type, subject, serviceProvider, participantID, participantType, plannedStartDate, plannedEndDate, length, diagnoses, preAdmissionIdentifier, admissionDestination) " #subjectStatus only in R5
         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(encounter.values()))
@@ -155,13 +169,6 @@ def insert_diagnosticreport(diagnosticreport):
     )
     cursor.execute(query, list(diagnosticreport.values()))
     connection.commit()
-
-# Generate and insert data
-num_patients = 1
-num_practitioners = 5
-num_encounters_per_patient = 5
-num_observations_per_encounter = 5
-num_diagnosticreports_per_encounter = 3
 
 practitioners = [generate_practitioner() for _ in range(num_practitioners)]
 for practitioner in practitioners:
