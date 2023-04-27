@@ -6,12 +6,12 @@ CREATE DATABASE fhir;
 
 CREATE TABLE patient (
     id VARCHAR PRIMARY KEY,
-    status BOOLEAN,
+    active BOOLEAN,
     name VARCHAR,
     telecom VARCHAR,
     gender VARCHAR,
     birthDate DATE,
-    deceased BOOLEAN,
+    deceasedBoolean BOOLEAN,
     address VARCHAR,
     maritalStatus VARCHAR,
     multipleBirthBoolean BOOLEAN,
@@ -20,12 +20,12 @@ CREATE TABLE patient (
 
 CREATE TABLE practitioner (
     id VARCHAR PRIMARY KEY,
-    status VARCHAR,
+    active BOOLEAN,
     name VARCHAR,
     telecom VARCHAR,
     gender VARCHAR,
     birthDate DATE,
-    deceased BOOLEAN,
+    --deceasedBoolean BOOLEAN, only in R5
     address VARCHAR,
     photo BYTEA,
     language VARCHAR

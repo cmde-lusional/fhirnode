@@ -28,15 +28,15 @@ fake = Faker()
 def generate_patient():
     return {
         'id': str(uuid.uuid4()),
-        'status': random.choice([True, False]),
+        'active': random.choice([True, False]),
         'name': fake.name(),
         'telecom': fake.phone_number(),
         'gender': random.choice(['male', 'female']),
         'birthDate': fake.date_between(start_date='-100y', end_date='today'),
-        'deceased': random.choice([True, False]),
+        'deceasedBoolean': random.choice([True, False]),
         'address': fake.address(),
         'maritalStatus': random.choice(['single', 'married', 'divorced']),
-        'multipleBirth': random.choice([True, False]),
+        'multipleBirthBoolean': random.choice([True, False]),
         'photo': None  # Assuming you don't need a photo for this example
     }
 
@@ -44,12 +44,12 @@ def generate_patient():
 def generate_practitioner():
     return {
         'id': str(uuid.uuid4()),
-        'status': random.choice(['active', 'inactive']),
+        'active': random.choice([True, False]),
         'name': fake.name(),
         'telecom': fake.phone_number(),
         'gender': random.choice(['male', 'female']),
         'birthDate': fake.date_between(start_date='-100y', end_date='today'),
-        'deceased': random.choice([True, False]),
+        # 'deceasedBoolean': random.choice([True, False]), only in R5
         'address': fake.address(),
         'photo': None,  # Assuming you don't need a photo for this example
         'language': random.choice(['en', 'es', 'fr', 'de', 'it'])
@@ -114,7 +114,7 @@ def generate_diagnosticreport(patient_id, encounter_id, practitioner_id):
 # Function to insert a single patient
 def insert_patient(patient):
     query = sql.SQL(
-        "INSERT INTO patient (id, status, name, telecom, gender, birthDate, deceased, address, maritalStatus, multipleBirth, photo) "
+        "INSERT INTO patient (id, active, name, telecom, gender, birthDate, deceasedBoolean, address, maritalStatus, multipleBirthBoolean, photo) "
         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(patient.values()))
@@ -123,8 +123,8 @@ def insert_patient(patient):
 # Function to insert a single practitioner
 def insert_practitioner(practitioner):
     query = sql.SQL(
-        "INSERT INTO practitioner (id, status, name, telecom, gender, birthDate, deceased, address, photo, language) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        "INSERT INTO practitioner (id, active, name, telecom, gender, birthDate, address, photo, language) " #deceasedBoolean only in R5
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(practitioner.values()))
     connection.commit()

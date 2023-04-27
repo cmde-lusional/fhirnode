@@ -1,0 +1,44 @@
+# macOS Files #
+.DS_Store
+
+# Build artifacts #
+build/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+*.class
+
+# Dependency directories #
+node_modules/
+bower_components/
+
+# Logs and databases #
+*.log
+*.sqlite
+*.sqlite3
+*.log.*
+*.db
+
+# IDE files #
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Package files #
+*.tar
+*.tgz
+*.gz
+*.zip
+
+# Miscellaneous #
+*.tmp
+*.bak
+*.cache
+Thumbs.db
+Desktop.ini
+

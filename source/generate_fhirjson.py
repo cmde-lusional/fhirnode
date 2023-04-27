@@ -1,6 +1,7 @@
 import psycopg2
 import json
 import datetime
+import base64
 
 def get_data_fhir(table_name, columns):
     query = f"SELECT {', '.join(columns)} FROM {table_name};"
@@ -15,33 +16,50 @@ def get_data_fhir(table_name, columns):
             if isinstance(value, datetime.date):
                 value = value.isoformat()
 
-            if table_name == "patient":
-                if column == "name":
-                    item["name"] = [{"text": value}]
-                elif column == "telecom" or column == "address" or column == "photo":
-                    item[column] = [value] if value is not None else []
-                elif column == "maritalStatus":
-                    item[column] = {"text": value}
+            if table_name == "patient" and column == "name":
+                item["name"] = [{"text": value}]
+            elif table_name == "patient" and column == "telecom":
+                if value is not None:
+                    item["telecom"] = [{"system": "phone", "value": value}]
                 else:
-                    item[column] = value
-
+                    item["telecom"] = []
+            elif table_name == "patient" and column == "address":
+                item["address"] = [{"text": value}]
+            elif table_name == "patient" and column == "maritalStatus":
+                item["maritalStatus"] = {"text": value}
+            elif table_name == "patient" and column == "photo":
+                attachment = {}
+                if value is None:
+                    value = base64.b64encode(b'null').decode('utf-8')
+                attachment["data"] = value
+                attachment["contentType"] = "application/octet-stream"
+                item["photo"] = [attachment]
             elif table_name == "practitioner" and column == "name":
                 item["name"] = [{"text": value}]
-
+            elif table_name == "practitioner" and column == "telecom":
+                if value is not None:
+                    item["telecom"] = [{"system": "phone", "value": value}]
+                else:
+                    item["telecom"] = []
+            elif table_name == "practitioner" and column == "address":
+                item["address"] = [{"text": value}]
+            elif table_name == "practitioner" and column == "photo":
+                attachment = {}
+                if value is None:
+                    value = base64.b64encode(b'null').decode('utf-8')
+                attachment["data"] = value
+                attachment["contentType"] = "application/octet-stream"
+                item["photo"] = [attachment]
             elif table_name == "encounter" and column in ["subject", "preAdmissionIdentifier", "admissionDestination"]:
                 item[column] = {"reference": f"Patient/{value}"} if column == "subject" else {"reference": f"Practitioner/{value}"}
-
             elif table_name == "observation" and column in ["subject", "encounter", "performer"]:
                 reference = "Patient" if column == "subject" else ("Encounter" if column == "encounter" else "Practitioner")
                 item[column] = {"reference": f"{reference}/{value}"}
-
             elif table_name == "diagnosticreport" and column in ["subject", "encounter", "performer"]:
                 reference = "Patient" if column == "subject" else ("Encounter" if column == "encounter" else "Practitioner")
                 item[column] = {"reference": f"{reference}/{value}"}
-
             else:
                 item[column] = value
-
         data.append(item)
 
     return data
@@ -65,8 +83,8 @@ if __name__ == "__main__":
 
     # Schema as a dictionary of lists
     schema = {
-        "patient": ["id", "status", "name", "telecom", "gender", "birthDate", "deceased", "address", "maritalStatus", "multipleBirth", "photo"],
-        "practitioner": ["id", "status", "name", "telecom", "gender", "birthDate", "deceased", "address", "photo", "language"],
+        "patient": ["id", "active", "name", "telecom", "gender", "birthDate", "deceasedBoolean", "address", "maritalStatus", "multipleBirthBoolean", "photo"],
+        "practitioner": ["id", "active", "name", "telecom", "gender", "birthDate", "address", "photo", "language"], #deceasedBoolean only in R5
         "encounter": ["id", "status", "class", "priority", "type", "subject", "subjectStatus", "serviceProvider", "participantType", "plannedStartDate", "plannedEndDate", "length", "diagnoses", "preAdmissionIdentifier", "admissionDestination"],
         "observation": ["id", "status", "code", "subject", "encounter", "issued", "performer", "valueQuantity", "valueString", "valueBool", "valueInteger", "interpretation", "note", "bodySite", "method", "device"],
         "diagnosticreport": ["id", "status", "code", "subject", "encounter", "issued", "performer", "result", "note", "mediaComment", "mediaLink"]
