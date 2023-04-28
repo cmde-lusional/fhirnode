@@ -38,27 +38,29 @@ CREATE TABLE encounter (
     priority VARCHAR,
     type VARCHAR,
     subject VARCHAR,
-    subjectStatus VARCHAR,
-    serviceProvider VARCHAR,
+    -- subjectStatus VARCHAR, only in R5
+    -- serviceProvider VARCHAR, relation to complicated because I need to also create that organization - should create another table
+    participantID VARCHAR,
     participantType VARCHAR,
-    plannedStartDate DATE,
-    plannedEndDate DATE,
+    -- plannedStartDate DATE,only in R5
+    -- plannedEndDate DATE, only in R5
     length INT,
-    diagnoses VARCHAR,
+    -- diagnoses VARCHAR, only in R5
     preAdmissionIdentifier VARCHAR,
-    admissionDestination VARCHAR,
+    destination VARCHAR,
     FOREIGN KEY (subject) REFERENCES patient (id),
+    FOREIGN KEY (participantID) REFERENCES practitioner (id),
     FOREIGN KEY (preAdmissionIdentifier) REFERENCES practitioner (id),
-    FOREIGN KEY (admissionDestination) REFERENCES practitioner (id)
+    FOREIGN KEY (destination) REFERENCES practitioner (id)
 );
 
-CREATE TABLE encounter_participant (
-    encounter_id VARCHAR,
-    practitioner_id VARCHAR,
-    PRIMARY KEY (encounter_id, practitioner_id),
-    FOREIGN KEY (encounter_id) REFERENCES encounter (id),
-    FOREIGN KEY (practitioner_id) REFERENCES practitioner (id)
-);
+--CREATE TABLE encounter_participant (
+--    encounter_id VARCHAR,
+--    practitioner_id VARCHAR,
+--    PRIMARY KEY (encounter_id, practitioner_id),
+--    FOREIGN KEY (encounter_id) REFERENCES encounter (id),
+--    FOREIGN KEY (practitioner_id) REFERENCES practitioner (id)
+--);
 
 CREATE TABLE observation (
     id VARCHAR PRIMARY KEY,
@@ -69,14 +71,12 @@ CREATE TABLE observation (
     issued DATE,
     performer VARCHAR,
     valueQuantity VARCHAR,
-    valueString VARCHAR,
-    valueBool BOOLEAN,
-    valueInteger INT,
+    valueUnit VARCHAR,
     interpretation VARCHAR,
     note VARCHAR,
     bodySite VARCHAR,
     method VARCHAR,
-    device VARCHAR,
+    --- device VARCHAR, to complicated, would need to implement another table as device is a resource in fhir that needs to be referenced
     FOREIGN KEY (subject) REFERENCES patient (id),
     FOREIGN KEY (encounter) REFERENCES encounter (id),
     FOREIGN KEY (performer) REFERENCES practitioner (id)

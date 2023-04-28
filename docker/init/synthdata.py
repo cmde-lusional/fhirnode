@@ -33,7 +33,7 @@ num_diagnosticreports_per_encounter = 3
 
 # Generate a pool of practitioner IDs
 practitioner_ids = [str(uuid.uuid4()) for _ in range(num_practitioners)]
-practioner_ids_for_encounter = practitioner_ids.copy()
+practioner_ids_for_relation = practitioner_ids.copy()
 
 # Generate a single patient
 def generate_patient():
@@ -68,7 +68,7 @@ def generate_practitioner():
 
 # Generate a single encounter
 def generate_encounter(patient_id, practitioner_id):
-    if not practioner_ids_for_encounter:
+    if not practioner_ids_for_relation:
         raise ValueError("No practitioners available for encounter")
     return {
         'id': str(uuid.uuid4()),
@@ -78,15 +78,15 @@ def generate_encounter(patient_id, practitioner_id):
         'type': random.choice(['emergency', 'urgent', 'elective', 'routine']),
         'subject': patient_id,
          #'subjectStatus': random.choice(['active', 'inactive']), only in R5
-        'serviceProvider': fake.company(),
-        'participantID': random.choice(practioner_ids_for_encounter),
+         # 'serviceProvider': fake.company(), relation to complicated because I need to also create that organization - should create another table
+        'participantID': random.choice(practioner_ids_for_relation),
         'participantType': random.choice(['practitioner', 'relatedPerson']),
-        'plannedStartDate': fake.date_this_year(),
-        'plannedEndDate': fake.date_this_year(),
+         # 'plannedStartDate': fake.date_this_year(), only in R5
+         # 'plannedEndDate': fake.date_this_year(), only in R5
         'length': random.randint(1, 20),
-        'diagnoses': fake.bs(),
+         # 'diagnoses': fake.bs(), only in R5
         'preAdmissionIdentifier': practitioner_id,
-        'admissionDestination': practitioner_id
+        'destination': practitioner_id
     }
 
 # Generate a single observation
@@ -99,15 +99,13 @@ def generate_observation(patient_id, encounter_id, practitioner_id):
         'encounter': encounter_id,
         'issued': fake.date_this_year(),
         'performer': practitioner_id,
-        'valueQuantity': None,
-        'valueString': "{:.2f}".format(random.uniform(1.5, 2)),
-        'valueBool': None,
-        'valueInteger': None,
+        'valueQuantity': "{:.2f}".format(random.uniform(1.5, 2)),
+        'valueUnit': random.choice(['meter', 'kg', 'mmHg']),
         'interpretation': random.choice(['normal', 'abnormal', 'high', 'low']),
         'note': fake.sentence(),
-        'bodySite': None,
+        'bodySite': random.choice(['left', 'right', 'front', 'back', 'head']),
         'method': 'measurement',
-        'device': random.choice(['stadiometer', 'scale', 'sphygmomanometer', 'pulse oximeter'])
+         # 'device': random.choice(['stadiometer', 'scale', 'sphygmomanometer', 'pulse oximeter']) to complicated, would need to implement another table as device is a resource in fhir that needs to be referenced
     }
 
 def generate_diagnosticreport(patient_id, encounter_id, practitioner_id):
@@ -146,8 +144,8 @@ def insert_practitioner(practitioner):
 # Function to insert a single encounter
 def insert_encounter(encounter):
     query = sql.SQL(
-        "INSERT INTO encounter (id, status, class, priority, type, subject, serviceProvider, participantID, participantType, plannedStartDate, plannedEndDate, length, diagnoses, preAdmissionIdentifier, admissionDestination) " #subjectStatus only in R5
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        "INSERT INTO encounter (id, status, class, priority, type, subject, participantID, participantType, length, preAdmissionIdentifier, destination) " #subjectStatus , plannedStartDate, plannedEndDate, diagnoses only in R5; , serviceProvider to complicated
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(encounter.values()))
     connection.commit()
@@ -155,8 +153,8 @@ def insert_encounter(encounter):
 # Function to insert a single observation
 def insert_observation(observation):
     query = sql.SQL(
-        "INSERT INTO observation (id, status, code, subject, encounter, issued, performer, valueQuantity, valueString, valueBool, valueInteger, interpretation, note, bodySite, method, device) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        "INSERT INTO observation (id, status, code, subject, encounter, issued, performer, valueQuantity, valueUnit, interpretation, note, bodySite, method) " # , device - to complicated, would need to implement another table as device is a resource in fhir that needs to be referenced
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(observation.values()))
     connection.commit()

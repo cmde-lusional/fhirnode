@@ -1,11 +1,17 @@
 import psycopg2
 import urllib.parse
+import socket
+import socket
+
+#host_ip = socket.gethostbyname('docker.for.mac.localhost')
+host_ip = socket.gethostbyname('host.docker.internal')
+print("Docker Host IP Address:", host_ip)
 
 source_info = {
     "dbname": "fhir",
     "user": "postgres",
     "password": "password",
-    "ip": "192.168.1.102",
+    "ip": host_ip,
     "port": "5432",
     "port_docker": "5431"
 }
@@ -99,7 +105,7 @@ target_cur.execute(f"""
 #db_url 'postgresql://fdw_user:password@192.168.1.102:5431/fhir'
 
 # List of table names
-table_names = ['patient', 'practitioner', 'encounter', 'encounter_participant', 'observation', 'diagnosticreport']
+table_names = ['patient', 'practitioner', 'encounter', 'observation', 'diagnosticreport'] #, 'encounter_participant'
 
 # Import foreign schema for the given table names
 import_foreign_schema(target_conn, table_names)
