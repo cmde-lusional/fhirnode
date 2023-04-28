@@ -31,6 +31,16 @@ CREATE TABLE practitioner (
     language VARCHAR
 );
 
+CREATE TABLE media (
+    id VARCHAR PRIMARY KEY,
+    status VARCHAR,
+    subject VARCHAR,
+    operator VARCHAR,
+    content BYTEA,
+    FOREIGN KEY (subject) REFERENCES patient (id),
+    FOREIGN KEY (operator) REFERENCES practitioner (id)
+);
+
 CREATE TABLE encounter (
     id VARCHAR PRIMARY KEY,
     status VARCHAR,
@@ -82,7 +92,7 @@ CREATE TABLE observation (
     FOREIGN KEY (performer) REFERENCES practitioner (id)
 );
 
-CREATE TABLE diagnosticreport (
+CREATE TABLE diagnosticReport (
     id VARCHAR PRIMARY KEY,
     status VARCHAR,
     code VARCHAR,
@@ -96,5 +106,7 @@ CREATE TABLE diagnosticreport (
     mediaLink VARCHAR,
     FOREIGN KEY (subject) REFERENCES patient (id),
     FOREIGN KEY (encounter) REFERENCES encounter (id),
-    FOREIGN KEY (performer) REFERENCES practitioner (id)
+    FOREIGN KEY (performer) REFERENCES practitioner (id),
+    FOREIGN KEY (result) REFERENCES observation (id),
+    FOREIGN KEY (mediaLink) REFERENCES media (id)  -- Add this line to create a foreign key relationship with media table
 );

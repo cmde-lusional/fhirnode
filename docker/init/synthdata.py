@@ -66,6 +66,16 @@ def generate_practitioner():
         'language': random.choice(['en', 'es', 'fr', 'de', 'it'])
     }
 
+# Generate a single media
+def generate_media(patient_id, practitioner_id):
+    return {
+        'id': str(uuid.uuid4()),
+        'status': random.choice(['preparation', 'in-progress', 'not-done', 'on-hold', 'stopped', 'completed', 'entered-in-error', 'unknown']),
+        'subject': patient_id,
+        'operator': practitioner_id,
+        'content': 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA'
+    }
+
 # Generate a single encounter
 def generate_encounter(patient_id, practitioner_id):
     if not practioner_ids_for_relation:
@@ -108,7 +118,7 @@ def generate_observation(patient_id, encounter_id, practitioner_id):
          # 'device': random.choice(['stadiometer', 'scale', 'sphygmomanometer', 'pulse oximeter']) to complicated, would need to implement another table as device is a resource in fhir that needs to be referenced
     }
 
-def generate_diagnosticreport(patient_id, encounter_id, practitioner_id):
+def generate_diagnosticreport(patient_id, encounter_id, practitioner_id, observation_id, media_id):
     return {
         'id': str(uuid.uuid4()),
         'status': random.choice(['registered', 'preliminary', 'final', 'amended', 'cancelled', 'entered-in-error']),
@@ -117,11 +127,12 @@ def generate_diagnosticreport(patient_id, encounter_id, practitioner_id):
         'encounter': encounter_id,
         'issued': fake.date_this_year(),
         'performer': practitioner_id,
-        'result': fake.sentence(),
+        'result': observation_id,
         'note': fake.sentence(),
         'mediaComment': fake.sentence(),
-        'mediaLink': fake.url()
+        'mediaLink': media_id  # Change this line to use the media_id parameter
     }
+
 
 # Function to insert a single patient
 def insert_patient(patient):
@@ -139,6 +150,14 @@ def insert_practitioner(practitioner):
         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(practitioner.values()))
+    connection.commit()
+
+def insert_media(media):
+    query = sql.SQL(
+        "INSERT INTO media (id, status, subject, operator, content) "
+        "VALUES (%s, %s, %s, %s, %s)"
+    )
+    cursor.execute(query, list(media.values()))
     connection.commit()
 
 # Function to insert a single encounter
@@ -159,10 +178,10 @@ def insert_observation(observation):
     cursor.execute(query, list(observation.values()))
     connection.commit()
 
-# Function to insert a single diagnosticreport
+# Function to insert a single diagnosticReport
 def insert_diagnosticreport(diagnosticreport):
     query = sql.SQL(
-        "INSERT INTO diagnosticreport (id, status, code, subject, encounter, issued, performer, result, note, mediaComment, mediaLink) "
+        "INSERT INTO diagnosticReport (id, status, code, subject, encounter, issued, performer, result, note, mediaComment, mediaLink) "
         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(diagnosticreport.values()))
@@ -181,12 +200,19 @@ for patient in patients:
 
         for _ in range(num_observations_per_encounter):
             observation = generate_observation(patient['id'], encounter['id'], random.choice(practitioners)['id'])
+            observation_id = str(uuid.uuid4())
+            observation['id'] = observation_id
             insert_observation(observation)
 
-        for _ in range(num_diagnosticreports_per_encounter):
-            diagnosticreport = generate_diagnosticreport(patient['id'], encounter['id'],
-                                                         random.choice(practitioners)['id'])
-            insert_diagnosticreport(diagnosticreport)
+            for _ in range(num_diagnosticreports_per_encounter):
+                media = generate_media(patient['id'], random.choice(practitioners)['id'])
+                media_id = media['id']
+                insert_media(media)
+
+                diagnosticreport = generate_diagnosticreport(patient['id'], encounter['id'],
+                                                             random.choice(practitioners)['id'], observation_id,
+                                                             media_id)
+                insert_diagnosticreport(diagnosticreport)
 
 # Close the connection after inserting data
 cursor.close()
