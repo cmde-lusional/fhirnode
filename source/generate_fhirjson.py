@@ -59,13 +59,19 @@ def get_data_fhir(table_name, columns):
                 item["photo"] = [attachment]
 
             ###MEDIA RULES
+            elif table_name == "media" and column == "subject":
+                item["subject"] = {"reference": f"Patient/{value}"} if value is not None else None
+            elif table_name == "media" and column == "operator":
+                item["operator"] = {"reference": f"Practitioner/{value}"} if value is not None else None
             elif table_name == "media" and column == "content":
                 attachment = {}
                 if value is not None:
                     value = base64.b64encode(value.tobytes()).decode('utf-8')
+                    attachment["data"] = value
+                    attachment[
+                        "contentType"] = "application/octet-stream"  # Set the contentType based on your actual content type.
                 else:
-                    value = base64.b64encode(b'null').decode('utf-8')
-                attachment["data"] = value
+                    attachment["data"] = None
                 item["content"] = attachment
 
             ###ENCOUNTER RULES
@@ -157,6 +163,15 @@ def get_data_fhir(table_name, columns):
                 item[column] = {"coding": [{"code": value}]}
             elif table_name == "diagnosticReport" and column == "result":
                 item[column] = [{"reference": f"Observation/{value}"}]
+            elif table_name == "diagnosticReport" and (column == "mediaComment" or column == "mediaLink"):
+                if "media" not in item:
+                    item["media"] = [{}]
+                if column == "mediaComment":
+                    item["media"][0]["comment"] = value
+                elif column == "mediaLink":
+                    item["media"][0]["link"] = {"reference": f"Media/{value}"}
+            elif table_name == "diagnosticReport" and column == "issued":
+                value += "T00:00:00Z"  # Add time component if missing
 
 
 
@@ -191,7 +206,7 @@ if __name__ == "__main__":
         "media": ["id", "status", "subject", "operator", "content"],
         "encounter": ["id", "status", "class", "priority", "type", "subject", "participantID", "participantType", "length", "preAdmissionIdentifier", "destination"], #, "subjectStatus" , "plannedStartDate", "plannedEndDate", "diagnoses" only in R5
         "observation": ["id", "status", "code", "subject", "encounter", "issued", "performer", "valueQuantity", "valueUnit", "interpretation", "note", "bodySite", "method"], # device column is to complicated, would need to implement another table as device is a resource in fhir that needs to be referenced
-        "diagnosticReport": ["id", "status", "code", "subject", "encounter", "issued", "performer", "result", "note", "mediaComment", "mediaLink"]
+        "diagnosticReport": ["id", "status", "code", "subject", "encounter", "issued", "performer", "result", "mediaComment", "mediaLink"] #, "note" only in R5
     }
 
     fhir_json = generate_fhir_json(schema)

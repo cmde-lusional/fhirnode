@@ -4,6 +4,8 @@ import uuid
 import psycopg2
 from psycopg2 import sql
 import argparse
+import base64
+import os
 
 parser = argparse.ArgumentParser(description='Connect to PostgreSQL database.')
 
@@ -68,12 +70,20 @@ def generate_practitioner():
 
 # Generate a single media
 def generate_media(patient_id, practitioner_id):
+    image_folder = "/app/images"
+    image_files = os.listdir(image_folder)
+    random_image_file = random.choice(image_files)
+    image_path = os.path.join(image_folder, random_image_file)
+
+    with open(image_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
+
     return {
         'id': str(uuid.uuid4()),
         'status': random.choice(['preparation', 'in-progress', 'not-done', 'on-hold', 'stopped', 'completed', 'entered-in-error', 'unknown']),
         'subject': patient_id,
         'operator': practitioner_id,
-        'content': 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA'
+        'content': encoded_image
     }
 
 # Generate a single encounter
@@ -122,13 +132,13 @@ def generate_diagnosticreport(patient_id, encounter_id, practitioner_id, observa
     return {
         'id': str(uuid.uuid4()),
         'status': random.choice(['registered', 'preliminary', 'final', 'amended', 'cancelled', 'entered-in-error']),
-        'code': random.choice(['x-ray', 'ultrasound', 'CT scan', 'MRI']),
+        'code': random.choice(['1-8', '10002-4', '10010-7']),
         'subject': patient_id,
         'encounter': encounter_id,
         'issued': fake.date_this_year(),
         'performer': practitioner_id,
         'result': observation_id,
-        'note': fake.sentence(),
+        # 'note': fake.sentence(), only in R5
         'mediaComment': fake.sentence(),
         'mediaLink': media_id  # Change this line to use the media_id parameter
     }
@@ -181,8 +191,8 @@ def insert_observation(observation):
 # Function to insert a single diagnosticReport
 def insert_diagnosticreport(diagnosticreport):
     query = sql.SQL(
-        "INSERT INTO diagnosticReport (id, status, code, subject, encounter, issued, performer, result, note, mediaComment, mediaLink) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        "INSERT INTO diagnosticReport (id, status, code, subject, encounter, issued, performer, result, mediaComment, mediaLink) " #, note only in R5
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
     cursor.execute(query, list(diagnosticreport.values()))
     connection.commit()

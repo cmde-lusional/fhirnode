@@ -12,6 +12,7 @@ services:
     volumes:
       - fhirnode_sourcedb_patient_data:/var/lib/postgresql/data
       - ./init:/init
+      - ./init/images:/app/images
     ## run the init scripts for creating the schema and also filling it with fake data - tail command is to keep container running
     command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 

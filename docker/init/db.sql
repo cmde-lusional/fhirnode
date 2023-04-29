@@ -101,7 +101,7 @@ CREATE TABLE diagnosticReport (
     issued DATE,
     performer VARCHAR,
     result VARCHAR,
-    note VARCHAR,
+    -- note VARCHAR, only in R5
     mediaComment VARCHAR,
     mediaLink VARCHAR,
     FOREIGN KEY (subject) REFERENCES patient (id),
