@@ -23,6 +23,7 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - "5430:5432"
+      - "5000:5000"
     volumes:
       - fhirnode_sourcedb_multicorn_data:/var/lib/postgresql/data
 
