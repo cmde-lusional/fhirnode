@@ -210,7 +210,9 @@ if __name__ == "__main__":
     }
 
     fhir_json = generate_fhir_json(schema)
-    print(json.dumps(fhir_json, indent=2))
+
+    with open("output.json", "w") as outfile:
+        json.dump(fhir_json, outfile, indent=2)
 
     cursor.close()
     connection.close()
