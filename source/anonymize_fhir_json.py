@@ -24,5 +24,5 @@ with open("output.json", "r") as infile:
 anonymized_fhir_json = anonymize_fhir_json(fhir_json_example)
 
 # Save the anonymized FHIR JSON to a new file
-with open("anonymized_fhir.json", "w") as outfile:
+with open("anonymized_output.json", "w") as outfile:
     json.dump(anonymized_fhir_json, outfile, indent=2)

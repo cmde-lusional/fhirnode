@@ -1,0 +1,218 @@
+{
+    "patient": [
+      {
+        "resourceType": "Patient",
+        "id": "980b252f-729b-4f91-9914-a64db3b8f3dd",
+        "active": true,
+        "name": [
+          {
+            "text": "Kenneth Stewart"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "001-393-304-7186x423"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1930-11-17",
+        "deceasedBoolean": true,
+        "address": [
+          {
+            "text": "9942 Daniel Walks Suite 994\nCamachostad, ID 09067"
+          }
+        ],
+        "maritalStatus": {
+          "text": "divorced"
+        },
+        "multipleBirthBoolean": false,
+        "photo": [
+          {
+            "data": "bnVsbA==",
+            "contentType": "application/octet-stream"
+          }
+        ]
+      }
+    ],
+    "practitioner": [
+      {
+        "resourceType": "Practitioner",
+        "id": "763259d3-8360-4322-b304-b800badd42d0",
+        "active": false,
+        "name": [
+          {
+            "text": "Anthony Medina"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "(999)438-5567"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1977-01-08",
+        "address": [
+          {
+            "text": "83259 Justin Estate Apt. 711\nContrerasberg, ID 83990"
+          }
+        ],
+        "photo": [
+          {
+            "data": "bnVsbA==",
+            "contentType": "application/octet-stream"
+          }
+        ],
+        "language": "de"
+      }
+    ],
+    "media": [
+        {
+          "resourceType": "Media",
+          "id": "d106288b-f73b-4c90-832b-47a31e569af7",
+          "status": "in-progress",
+          "subject": {
+            "reference": "Patient/980b252f-729b-4f91-9914-a64db3b8f3dd"
+          },
+          "operator": {
+            "reference": "Practitioner/92ebb79a-7fa6-4814-ae01-67b8f7e68502"
+          },
+          "content": {
+            "data": "bnVsbA==",
+            "contentType": "application/octet-stream"
+          }
+        }
+    ],
+    "encounter": [
+        {
+          "resourceType": "Encounter",
+          "id": "a5226600-777f-403e-8bff-aa09bdd16bf4",
+          "status": "cancelled",
+          "class": {
+            "code": "outpatient"
+          },
+          "priority": {
+            "text": "medium"
+          },
+          "type": [
+            {
+              "text": "routine"
+            }
+          ],
+          "subject": {
+            "reference": "Patient/980b252f-729b-4f91-9914-a64db3b8f3dd"
+          },
+          "participant": [
+            {
+              "type": [
+                {
+                  "text": "practitioner"
+                }
+              ],
+              "individual": {
+                "reference": "Practitioner/0e0d9463-f357-4419-b50b-6f44f7534c2c"
+              }
+            }
+          ],
+          "length": {
+            "value": 19,
+            "unit": "minutes",
+            "code": "min",
+            "system": "http://unitsofmeasure.org"
+          },
+          "hospitalization": {
+            "preAdmissionIdentifier": {
+              "value": "6a744881-9524-461d-99a9-2e8cc95a1258"
+            },
+            "destination": {
+              "reference": "6a744881-9524-461d-99a9-2e8cc95a1258"
+            }
+          }
+        }
+    ],
+    "observation": [
+        {
+          "resourceType": "Observation",
+          "id": "869fffdc-4032-4b2c-8972-c609a8d2692d",
+          "status": "amended",
+          "code": {
+            "coding": [
+              {
+                "code": "blood pressure"
+              }
+            ]
+          },
+          "subject": {
+            "reference": "Patient/980b252f-729b-4f91-9914-a64db3b8f3dd"
+          },
+          "encounter": {
+            "reference": "Encounter/a5226600-777f-403e-8bff-aa09bdd16bf4"
+          },
+          "performer": [
+            {
+              "reference": "Practitioner/3fbb3ec9-147d-4cf1-bec1-6221dc09144e"
+            }
+          ],
+          "valueQuantity": {
+            "value": 1.68,
+            "unit": "mmHg"
+          },
+          "interpretation": [
+            {
+              "text": "high"
+            }
+          ],
+          "note": [
+            {
+              "text": "Us sense my another financial red economic."
+            }
+          ],
+          "bodySite": {
+            "text": "left"
+          },
+          "method": {
+            "text": "measurement"
+          }
+        }
+    ],
+    "diagnosticReport": [
+        {
+          "resourceType": "DiagnosticReport",
+          "id": "f19ebf3a-a431-48ca-b173-fdc1ddc9b7d4",
+          "status": "registered",
+          "code": {
+            "coding": [
+              {
+                "code": "10010-7"
+              }
+            ]
+          },
+          "subject": {
+            "reference": "Patient/980b252f-729b-4f91-9914-a64db3b8f3dd"
+          },
+          "encounter": {
+            "reference": "Encounter/a5226600-777f-403e-8bff-aa09bdd16bf4"
+          },
+          "performer": [
+            {
+              "reference": "Practitioner/6a744881-9524-461d-99a9-2e8cc95a1258"
+            }
+          ],
+          "result": [
+            {
+              "reference": "Observation/869fffdc-4032-4b2c-8972-c609a8d2692d"
+            }
+          ],
+          "media": [
+            {
+              "comment": "Surface around face always pass.",
+              "link": {
+                "reference": "Media/d106288b-f73b-4c90-832b-47a31e569af7"
+              }
+            }
+          ]
+        }
+    ]
+}
+          
