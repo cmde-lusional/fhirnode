@@ -128,6 +128,7 @@ def generate_observation(patient_id, encounter_id, practitioner_id):
          # 'device': random.choice(['stadiometer', 'scale', 'sphygmomanometer', 'pulse oximeter']) to complicated, would need to implement another table as device is a resource in fhir that needs to be referenced
     }
 
+# Generate a single diagnostic report
 def generate_diagnosticreport(patient_id, encounter_id, practitioner_id, observation_id, media_id):
     return {
         'id': str(uuid.uuid4()),
@@ -162,6 +163,7 @@ def insert_practitioner(practitioner):
     cursor.execute(query, list(practitioner.values()))
     connection.commit()
 
+# Function to insert a single media
 def insert_media(media):
     query = sql.SQL(
         "INSERT INTO media (id, status, subject, operator, content) "
