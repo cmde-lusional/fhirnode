@@ -9,17 +9,29 @@ SOURCEDBPATIENT
 The docker dir in this repo contains multiple dirs for different dockerfiles. 
 They all work together in the docker-compose.yaml under the docker dir.
 
-The fhirnode_sourcedb_patient contains a postgresql with a custom schema to
+The fhirterminalnode_sourcedbpatient container runs a postgresql with a custom schema to
 simulate a patients local db. The docker-compose.yaml runs a sql file which builds
 the schema and a python script that updates the patients db with synthetic data.
 
-The fhirnode_sourcedb_multicorn node is the node that wrapps the data to send it
-to any requester. It is based on the dockerfile image under the docker multicorn dir.
+The fhirterminalnode_sourceterminal container is the node that wrapps the data to send it
+to any requester. It is based on the dockerfile image under the docker multicorn2 dir.
 This image was build up on my forked repo here:
 
 [cmde-lusional/multicorn2
 ](https://github.com/cmde-lusional/multicorn2)
  
+Together fhirterminalnode_sourcedbpatient and fhirterminalnode_sourceterminal work as a "unit". Our test 
+environment is build around this units.
+
+A init folder will mount all the necessary scripts into any of the container. The "import_foreign_schema.py" uses 
+the docker-compose.yaml env "SOURCE_PORT" to access its units partner. 
+Partners for example are:
+- fhirterminalnode_sourcedbpatient_0 and fhirterminalnode_sourceterminal_0
+- fhirterminalnode_sourcedbpatient_1 and fhirterminalnode_sourceterminal_1
+- ...
+
+The "docker-startup.sh" is dynamically creating the docker-compose.yaml. With this script we can scale up
+the numbers of our containers inside our docker host to simulate multiple patient instances.
 
 -> you can find more infor inside the LEGACY section of this README.md
 

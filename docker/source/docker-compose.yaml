@@ -1,0 +1,355 @@
+version: '3.8'
+services:
+  fhirterminalnode_sourcedbpatient_0:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_0
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5433:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_0:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_0:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_0
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_0
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5433
+    ports:
+      - "5434:5432"
+      - "5000:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_0:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_1:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_1
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5435:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_1:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_1:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_1
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_1
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5435
+    ports:
+      - "5436:5432"
+      - "5001:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_1:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_2:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_2
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5437:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_2:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_2:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_2
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_2
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5437
+    ports:
+      - "5438:5432"
+      - "5002:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_2:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_3:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_3
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5439:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_3:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_3:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_3
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_3
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5439
+    ports:
+      - "5440:5432"
+      - "5003:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_3:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_4:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_4
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5441:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_4:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_4:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_4
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_4
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5441
+    ports:
+      - "5442:5432"
+      - "5004:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_4:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_5:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_5
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5443:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_5:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_5:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_5
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_5
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5443
+    ports:
+      - "5444:5432"
+      - "5005:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_5:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_6:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_6
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5445:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_6:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_6:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_6
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_6
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5445
+    ports:
+      - "5446:5432"
+      - "5006:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_6:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_7:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_7
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5447:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_7:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_7:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_7
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_7
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5447
+    ports:
+      - "5448:5432"
+      - "5007:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_7:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_8:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_8
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5449:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_8:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_8:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_8
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_8
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5449
+    ports:
+      - "5450:5432"
+      - "5008:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_8:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_9:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_9
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5451:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_9:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_9:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_9
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_9
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5451
+    ports:
+      - "5452:5432"
+      - "5009:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_9:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+  fhirterminalnode_sourcedbpatient_10:
+    image: sourcedbpatient
+    container_name: fhirterminalnode_sourcedbpatient_10
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5453:5432"
+    volumes:
+      - fhirterminalnode_sourcedbpatient_data_10:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirterminalnode_sourceterminalnode_10:
+    image: fhirnode_multicorn
+    container_name: fhirterminalnode_sourceterminalnode_10
+    depends_on:
+      - fhirterminalnode_sourcedbpatient_10
+    environment:
+      - POSTGRES_PASSWORD=password
+      - SOURCE_PORT=5453
+    ports:
+      - "5454:5432"
+      - "5010:5000"
+    volumes:
+      - fhirterminalnode_sourceterminalnode_data_10:/var/lib/postgresql/data
+      - ./init:/init
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && tail -f /dev/null"]
+
+volumes:
+  fhirterminalnode_sourcedbpatient_data_0:
+  fhirterminalnode_sourceterminalnode_data_0:
+  fhirterminalnode_sourcedbpatient_data_1:
+  fhirterminalnode_sourceterminalnode_data_1:
+  fhirterminalnode_sourcedbpatient_data_2:
+  fhirterminalnode_sourceterminalnode_data_2:
+  fhirterminalnode_sourcedbpatient_data_3:
+  fhirterminalnode_sourceterminalnode_data_3:
+  fhirterminalnode_sourcedbpatient_data_4:
+  fhirterminalnode_sourceterminalnode_data_4:
+  fhirterminalnode_sourcedbpatient_data_5:
+  fhirterminalnode_sourceterminalnode_data_5:
+  fhirterminalnode_sourcedbpatient_data_6:
+  fhirterminalnode_sourceterminalnode_data_6:
+  fhirterminalnode_sourcedbpatient_data_7:
+  fhirterminalnode_sourceterminalnode_data_7:
+  fhirterminalnode_sourcedbpatient_data_8:
+  fhirterminalnode_sourceterminalnode_data_8:
+  fhirterminalnode_sourcedbpatient_data_9:
+  fhirterminalnode_sourceterminalnode_data_9:
+  fhirterminalnode_sourcedbpatient_data_10:
+  fhirterminalnode_sourceterminalnode_data_10:

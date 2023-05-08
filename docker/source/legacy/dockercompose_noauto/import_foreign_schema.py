@@ -92,7 +92,7 @@ target_cur.execute("CREATE EXTENSION IF NOT EXISTS multicorn;")
 target_cur = target_conn.cursor()
 # Use the encoded DB URL string in the SQL query
 target_cur.execute(f"""
-    DROP SERVER alchemy_srv CASCADE;
+    DROP SERVER IF EXISTS alchemy_srv CASCADE;
     CREATE EXTENSION IF NOT EXISTS multicorn;
     CREATE SERVER IF NOT EXISTS alchemy_srv
     FOREIGN DATA WRAPPER multicorn

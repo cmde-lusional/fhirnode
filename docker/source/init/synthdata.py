@@ -74,6 +74,7 @@ def generate_media(patient_id, practitioner_id):
     image_files = os.listdir(image_folder)
     random_image_file = random.choice(image_files)
     image_path = os.path.join(image_folder, random_image_file)
+    #Fix for kubernetes: image_path = os.path.realpath(os.path.join(image_folder, random_image_file))
 
     with open(image_path, "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read()).decode("utf-8")

@@ -31,4 +31,3 @@ services:
 volumes:
   fhirnode_sourcedb_patient_data:
   fhirnode_sourcedb_multicorn_data:
-

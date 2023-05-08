@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  fhirnode_sourcedb_patient:
+    image: sourcedbpatient
+    container_name: fhirnode_sourcedb_patient
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=fhir
+    ports:
+      - "5431:5432"
+    volumes:
+      - fhirnode_sourcedb_patient_data:/var/lib/postgresql/data
+      - ./init:/init
+      - ./init/images:/app/images
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+
+  fhirnode_sourcedb_multicorn:
+    image: fhirnode_multicorn
+    container_name: fhirnode_sourcedb_multicorn
+    depends_on:
+      - fhirnode_sourcedb_patient
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5430:5432"
+      - "5000:5000"
+    volumes:
+      - fhirnode_sourcedb_multicorn_data:/var/lib/postgresql/data
+      - ./init:/init
+    ## the following line automatically starts the fhirterminalnode_sourceterminalnodes scripts for import, processing and editing the data
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 5 && /init/wait-for-it.sh fhirnode_sourcedb_patient:5432 -- python3 /init/import_foreign_schema.py && python3 /init/generate_fhir_json.py && python3 /init/anonymize_fhir_json.py && python3 /init/export_fhir_json.py && tail -f /dev/null"]
+
+volumes:
+  fhirnode_sourcedb_patient_data:
+  fhirnode_sourcedb_multicorn_data:
