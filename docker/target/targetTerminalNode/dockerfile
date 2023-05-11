@@ -1,0 +1,25 @@
+FROM python:3.9-alpine
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+USER root
+RUN mkdir /app
+
+WORKDIR /app
+COPY init/request_fhir_json.py /app/
+
+# Install required libraries
+RUN pip install Flask requests
+
+# Change permission for the script file and the app directory
+RUN chmod 500 /app/request_fhir_json.py
+RUN chmod 700 /app
+
+# Update ownership of the /app directory and the script
+RUN chown appuser:appgroup /app
+RUN chown appuser:appgroup /app/request_fhir_json.py
+
+USER appuser
+#CMD ["tail", "-f", "/dev/null"]
+
+CMD ["python", "request_fhir_json.py"]

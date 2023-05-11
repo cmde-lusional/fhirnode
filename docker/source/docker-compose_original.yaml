@@ -12,7 +12,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_0:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_0:
     image: fhirnode_multicorn
@@ -42,7 +42,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_1:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_1:
     image: fhirnode_multicorn
@@ -72,7 +72,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_2:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_2:
     image: fhirnode_multicorn
@@ -102,7 +102,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_3:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_3:
     image: fhirnode_multicorn
@@ -132,7 +132,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_4:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_4:
     image: fhirnode_multicorn
@@ -162,7 +162,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_5:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_5:
     image: fhirnode_multicorn
@@ -192,7 +192,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_6:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_6:
     image: fhirnode_multicorn
@@ -222,7 +222,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_7:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_7:
     image: fhirnode_multicorn
@@ -252,7 +252,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_8:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_8:
     image: fhirnode_multicorn
@@ -282,7 +282,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_9:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_9:
     image: fhirnode_multicorn
@@ -312,7 +312,7 @@ services:
       - fhirterminalnode_sourcedbpatient_data_10:/var/lib/postgresql/data
       - ./init:/init
       - ./init/images:/app/images
-    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 20 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
+    command: ["bash", "-c", "docker-entrypoint.sh postgres & sleep 30 && psql -U postgres -f /init/db.sql && python3 /init/synthdata.py -u postgres -p password && tail -f /dev/null"]
 
   fhirterminalnode_sourceterminalnode_10:
     image: fhirnode_multicorn
