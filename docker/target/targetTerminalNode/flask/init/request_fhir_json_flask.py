@@ -1,7 +1,10 @@
 import sys
+import os
 import requests
 import json
 from flask import Flask, request, jsonify
+
+api_key_os = os.environ.get("API_KEY")
 
 app = Flask(__name__)
 
@@ -42,17 +45,21 @@ def fetch_data(permission_arg):
 
         return aggregated_data
 
+
 @app.route('/trigger', methods=['GET'])
 def trigger():
+    api_key = request.headers.get("X-API-Key")
+    if api_key != api_key_os:
+        return "Unauthorized", 401
+
     permission_arg = request.args.get('permission_arg', None)
+
     if permission_arg not in ["read", "download"]:
         return 'Invalid permission_arg value. Use "read" or "download"', 400
-    #else:
-    #    fetch_data(permission_arg)
-    #    return 'Data fetched and aggregated successfully', 200
     else:
         aggregated_data = fetch_data(permission_arg)
         return jsonify(aggregated_data), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
