@@ -1,3 +1,5 @@
+#### this script takes in a string (the api key) and uses cryptography to generate an encrypted key and the encryption key
+
 from cryptography.fernet import Fernet
 
 api_key = "your_api_key"
