@@ -29,9 +29,7 @@ target_info = {
 
 # Construct the DB URL string using the source_info dictionary
 db_url_target = f"""postgresql://{source_info['user']}:{source_info['password']}@{source_info['ip']}:{source_info['port_docker']}/{source_info['dbname']}"""
-
-# URL encode the DB URL string
-# db_url_encoded = urllib.parse.quote_plus(db_url_target)
+#db_url 'postgresql://fdw_user:password@192.168.1.102:5431/fhir'
 
 def create_database():
     conn = psycopg2.connect(
@@ -103,8 +101,6 @@ target_cur.execute(f"""
         db_url '{db_url_target}'
     )
 """)
-
-#db_url 'postgresql://fdw_user:password@192.168.1.102:5431/fhir'
 
 # List of table names
 table_names = ['patient', 'practitioner', 'media', 'encounter', 'observation', 'diagnosticReport'] #, 'encounter_participant'
